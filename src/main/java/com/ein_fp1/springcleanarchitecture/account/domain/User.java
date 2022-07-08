@@ -6,10 +6,5 @@ import lombok.Value;
 
 @Value
 public class User {
-  @NotNull
-  private final String username;
-  @NotNull
-  private final String nickname;
-  @NotNull
-  private final String birth;
+
 }

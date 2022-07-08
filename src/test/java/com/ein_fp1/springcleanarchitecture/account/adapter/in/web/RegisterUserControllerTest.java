@@ -4,9 +4,8 @@ import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterGuestCommand;
-import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterUserUseCase;
-import com.ein_fp1.springcleanarchitecture.account.domain.User;
+import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterAccountCommand;
+import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterAccountUseCase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
@@ -15,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
@@ -24,31 +24,40 @@ class RegisterUserControllerTest {
   @Autowired
   private MockMvc mockMvc;
 
+
   @MockBean
-  private RegisterUserUseCase registerUserUseCase;
+  private RegisterAccountUseCase registerAccountUseCase;
 
   @Autowired
   ObjectMapper objectMapper;
 
+
   @Test
-  void testRegisterGuest() throws Exception {
-    mockMvc.perform(post("/account/user/guests")
-        .header(HttpHeaders.CONTENT_TYPE, "application/json")
+  void testRegisterAccount() throws Exception {
+    mockMvc.perform(post("/accounts/register")
+        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
             .content(
                 objectMapper.writeValueAsBytes(
-                    new RegisterGuestRequest(
-                        "user",
-                        "nick",
-                        "19000101")
+                    new RegisterAccountRequest(
+                        "ein.fp1@gmail.com",
+                        "ein.fp1",
+                        "ein_fp1",
+                        "abcd"
+                    )
                 )
             )
         )
         .andExpect(status().isOk());
 
-    then(registerUserUseCase)
+    then(registerAccountUseCase)
         .should()
-        .registerGuest(
-            eq(new RegisterGuestCommand(new User("user", "nick", "19000101"))
+        .registerAccount(
+            eq(new RegisterAccountCommand(
+                "ein.fp1@gmail.com",
+                "ein.fp1",
+                "ein_fp1",
+                "abcd"
+                )
             )
         );
   }

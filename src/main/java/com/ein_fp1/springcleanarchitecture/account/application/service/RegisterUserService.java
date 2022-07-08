@@ -1,10 +1,11 @@
 package com.ein_fp1.springcleanarchitecture.account.application.service;
 
-import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterGuestCommand;
-import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterUserCommand;
-import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterUserUseCase;
-import com.ein_fp1.springcleanarchitecture.account.application.port.out.RegisterUserPort;
-import com.ein_fp1.springcleanarchitecture.account.domain.Guest;
+import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterAccountCommand;
+import com.ein_fp1.springcleanarchitecture.account.application.port.in.RegisterAccountUseCase;
+import com.ein_fp1.springcleanarchitecture.account.application.port.out.RegisterAccountPort;
+import com.ein_fp1.springcleanarchitecture.account.domain.Account;
+import com.ein_fp1.springcleanarchitecture.account.domain.Account.AccountId;
+import com.ein_fp1.springcleanarchitecture.common.IdGenerator;
 import com.ein_fp1.springcleanarchitecture.common.UseCase;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -12,23 +13,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @UseCase
 @Transactional
-public class RegisterUserService implements RegisterUserUseCase {
+public class RegisterUserService implements RegisterAccountUseCase {
 
-  private final RegisterUserPort registerUserPort;
+  private final RegisterAccountPort registerAccountPort;
 
-  @Override
-  public void registerGuest(RegisterGuestCommand command) {
-    Guest guest = new Guest(1L, command.getUser());
-    registerUserPort.registerGuest(guest);
-  }
+  private final IdGenerator idGenerator;
 
   @Override
-  public void registerHost(RegisterUserCommand command) {
+  public void registerAccount(RegisterAccountCommand registerAccountCommand) {
+    AccountId newAccountId = AccountId.fromString(idGenerator.generateId());
+    Account account = new Account(
+        newAccountId,
+        registerAccountCommand.username(),
+        registerAccountCommand.displayName(),
+        registerAccountCommand.email()
+        );
 
-  }
-
-  @Override
-  public void registerAdmin(RegisterUserCommand command) {
-
+    registerAccountPort.registerAccount(account, registerAccountCommand.password());
   }
 }
