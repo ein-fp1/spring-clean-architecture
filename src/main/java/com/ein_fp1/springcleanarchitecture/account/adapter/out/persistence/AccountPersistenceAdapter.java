@@ -21,7 +21,7 @@ public class AccountPersistenceAdapter implements LoadAccountPort, RegisterAccou
   @Override
   public Account loadAccount(AccountId accountId){
 
-    AccountJpaEntity accountJpaEntity = accountRepository.findByAccountId(
+    final AccountJpaEntity accountJpaEntity = accountRepository.findByAccountId(
         accountId.id())
         .orElseThrow();
 

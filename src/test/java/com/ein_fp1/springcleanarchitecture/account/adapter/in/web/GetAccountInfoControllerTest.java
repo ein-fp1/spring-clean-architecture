@@ -2,11 +2,14 @@ package com.ein_fp1.springcleanarchitecture.account.adapter.in.web;
 
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ein_fp1.springcleanarchitecture.account.adapter.in.web.PersonalInfoResource.AccountResource;
 import com.ein_fp1.springcleanarchitecture.account.application.port.in.GetAccountInfoQuery;
 import com.ein_fp1.springcleanarchitecture.account.domain.Account;
 import com.ein_fp1.springcleanarchitecture.account.domain.Account.AccountId;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,8 +29,10 @@ public class GetAccountInfoControllerTest {
   @MockBean
   private GetAccountInfoQuery getAccountInfoQuery;
 
+  @Autowired
+  ObjectMapper objectMapper;
   @Test
-  void testGetPerson() throws Exception {
+  void testGetAccount() throws Exception {
     Account account = new Account(
         AccountId.fromString("1001"),
         "username1",

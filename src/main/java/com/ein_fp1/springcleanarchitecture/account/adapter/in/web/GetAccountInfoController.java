@@ -23,11 +23,13 @@ class GetAccountInfoController {
   ResponseEntity getAccountInfo (@PathVariable("accountId")AccountId accountId) {
     final var accountInfo = getAccountInfoQuery.getAccountInfo(accountId);
 
-    AccountViewResource accountViewResource = AccountViewResource
-        .builder()
-        .username(accountInfo.username())
-        .displayName(accountInfo.displayName())
-        .build();
+
+    AccountViewResource accountViewResource = new AccountViewResource(
+        accountInfo.accountId().id(),
+        accountInfo.username(),
+        accountInfo.displayName(),
+        accountInfo.email()
+    );
 
     return ResponseEntity.ok().body(accountViewResource);
 
